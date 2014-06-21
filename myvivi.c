@@ -31,6 +31,7 @@ static const struct v4l2_file_operations myvivi_fops = {
 	/* 0.1,定义一个 video_device 结构体 */
 static struct video_device *myvivi_device;
 
+//解决没有fops时注册驱动直接killed
 static void myvivi_release(struct video_device *vdev)
 {
 	
