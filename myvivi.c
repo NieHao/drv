@@ -29,6 +29,7 @@ static struct video_device *myvivi_device;
 
 static void myvivi_release(struct video_device *vdev)
 {
+	
 }
 
 // 一，入口函数: 分配，设置，注册
