@@ -41,7 +41,7 @@ static int myvivi_init(void)
 
 	// 1.2,设置
 	/*添加release函数,不然安装驱动时直接报错*/
-	myvivi_device->release = myvivi_release();
+	myvivi_device->release = myvivi_release;
 
 	// 1.3,注册
 	/* 	@1:video_device结构体即myvivi_devcie.
