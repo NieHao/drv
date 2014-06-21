@@ -23,6 +23,10 @@
 #include <media/v4l2-device.h>
 #include <media/v4l2-ioctl.h>
 
+static const struct v4l2_file_operations myvivi_fops = {
+	.owner		= THIS_MODULE,
+};
+
 // 零，相关结构等等
 	/* 0.1,定义一个 video_device 结构体 */
 static struct video_device *myvivi_device;
@@ -42,6 +46,7 @@ static int myvivi_init(void)
 	// 1.2,设置
 	/*添加release函数,不然安装驱动时直接报错*/
 	myvivi_device->release = myvivi_release;
+	myvivi_device->fops = &myvivi_fops;
 
 	// 1.3,注册
 	/* 	@1:video_device结构体即myvivi_devcie.
