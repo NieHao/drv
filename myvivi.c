@@ -22,11 +22,14 @@
 #include <media/videobuf-vmalloc.h>
 #include <media/v4l2-device.h>
 #include <media/v4l2-ioctl.h>
-#include "font.h"
 
 // 零，相关结构等等
 	/* 0.1,定义一个 video_device 结构体 */
 static struct video_device *myvivi_device;
+
+static void myvivi_release(struct video_device *vdev)
+{
+}
 
 // 一，入口函数: 分配，设置，注册
 static int myvivi_init(void)
@@ -36,6 +39,8 @@ static int myvivi_init(void)
 	myvivi_device = video_device_alloc();
 
 	// 1.2,设置
+	/*添加release函数,不然安装驱动时直接报错*/
+	myvivi_device->release = myvivi_release();
 
 	// 1.3,注册
 	/* 	@1:video_device结构体即myvivi_devcie.
