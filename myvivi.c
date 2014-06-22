@@ -38,16 +38,29 @@ static int myvivi_vidioc_querycap(struct file *file, void  *priv,
 	return 0;
 }
 
+
+static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
+					struct v4l2_fmtdesc *f)
+{
+	if (f->index >= 1)
+		return -EINVAL;
+
+	strcpy(f->description, "4:2:2, packed, YUYV");
+	f->pixelformat = V4L2_PIX_FMT_YUYV;
+	return 0;
+}
+
+
 static const struct v4l2_ioctl_ops myvivi_ioctl_ops = {
 	/*表示它是一个摄像头设备*/
 		.vidioc_querycap	  = myvivi_vidioc_querycap,
-#if 0
+
 	/* 用于列举,获取,测试和设置摄像头的数据格式 */
 		.vidioc_enum_fmt_vid_cap  = myvivi_vidioc_enum_fmt_vid_cap,
 		.vidioc_g_fmt_vid_cap	  = myvivi_vidioc_g_fmt_vid_cap,
 		.vidioc_try_fmt_vid_cap   = myvivi_vidioc_try_fmt_vid_cap,
 		.vidioc_s_fmt_vid_cap	  = myvivi_vidioc_s_fmt_vid_cap,
-	
+#if 0
 	/* 缓冲区操作: 申请/查询/放入队列/取出队列 */
 		.vidioc_reqbufs 	  = myvivi_vidioc_reqbufs,
 		.vidioc_querybuf	  = myvivi_vidioc_querybuf,
