@@ -26,7 +26,7 @@
 /*v4l2像素的格式结构: formats格式数组的索引，vivi.c中定义了6项格式。
 还有BUF的类型，格式的描述，即格式名称。像素的格式。	
 */
-static struct v4l2_fmtdesc myvivi_format;
+static struct v4l2_format myvivi_format;
 
 /*队列操作1: 定义*/
 static struct videobuf_queue myvivi_vb_vidqueue;
