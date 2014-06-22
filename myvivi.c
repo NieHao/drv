@@ -23,6 +23,7 @@
 #include <media/v4l2-device.h>
 #include <media/v4l2-ioctl.h>
 
+v4l2_format *myvivi_format;
 
 /* ------------------------------------------------------------------
 	IOCTL vidioc handling
@@ -95,18 +96,11 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 {
 	/*在列表格式时,只支持了一种格式V4L2_PIX_FMT_YUYV,这里并没有具体硬件设备,只是虚拟
 	的摄像头设备,所以这里直接将拥有值为V4L2_PIX_FMT_YUYV这个结构的信息返回用户空间.*/
-	struct vivi_fh *fh = priv;
-
 	int ret = myvivi_vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
 		return ret;
-
-	*(fh->fmt)           = V4L2_PIX_FMT_YUYV;
-	fh->width         = f->fmt.pix.width;
-	fh->height        = f->fmt.pix.height;
-	fh->vb_vidq.field = f->fmt.pix.field;
-	fh->type          = f->type;
-
+	//将传进来的格式参数拷贝到myvivi_format结构.
+	memcpy(&myvivi_format, f, sizeof(myvivi_format));
 	return ret;
 }
 
@@ -117,17 +111,7 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 static int myvivi_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 					struct v4l2_format *f)
 {
-	struct vivi_fh *fh = priv;
-
-	f->fmt.pix.width        = fh->width;
-	f->fmt.pix.height       = fh->height;
-	f->fmt.pix.field        = fh->vb_vidq.field;
-	f->fmt.pix.pixelformat  = fh->fmt->fourcc;
-	f->fmt.pix.bytesperline =
-		(f->fmt.pix.width * fh->fmt->depth) >> 3;
-	f->fmt.pix.sizeimage =
-		f->fmt.pix.height * f->fmt.pix.bytesperline;
-
+	memcpy(f, &myvivi_format, sizeof(myvivi_format));
 	return (0);
 }
 
