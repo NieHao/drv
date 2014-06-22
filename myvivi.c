@@ -101,7 +101,7 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	if (ret < 0)
 		return ret;
 
-	fh->fmt           = get_format(f);
+	fh->fmt           = V4L2_PIX_FMT_YUYV;
 	fh->width         = f->fmt.pix.width;
 	fh->height        = f->fmt.pix.height;
 	fh->vb_vidq.field = f->fmt.pix.field;
