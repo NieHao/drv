@@ -109,7 +109,7 @@ static void myvivi_buffer_release(struct videobuf_queue *vq,
 /**/
 static struct videobuf_queue_ops myvivi_video_qops = {
 	.buf_setup      = myvivi_buffer_setup,//计算大小以免浪费空间
-	.buf_prepare    = myvivi_buffer_prepare,//
+	.buf_prepare    = myvivi_buffer_prepare,//准备工作,申请内存.
 	.buf_queue      = myvivi_buffer_queue,
 	.buf_release    = myvivi_buffer_release,
 };
