@@ -55,16 +55,6 @@ static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 }
 
 
-/*返回当前使用的格式:
-	构造 v4l2_format 结构体.
-*/
-static int myvivi_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-					struct v4l2_format *f)
-{
-	memcpy(f, &myvivi_format, sizeof(myvivi_format));
-	return (0);
-}
-
 /*测试驱动程序是否支持某种格式*/
 static int myvivi_vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 			struct v4l2_format *f)
