@@ -97,7 +97,7 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	的摄像头设备,所以这里直接将拥有值为V4L2_PIX_FMT_YUYV这个结构的信息返回用户空间.*/
 	struct vivi_fh *fh = priv;
 
-	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
+	int ret = myvivi_vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
 		return ret;
 
