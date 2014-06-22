@@ -102,7 +102,7 @@ static void myvivi_buffer_release(struct videobuf_queue *vq,
 			   struct videobuf_buffer *vb)
 {
 	videobuf_vmalloc_free(vb);
-	vb->tate = VIDEOBUF_NEEDS_INIT;//将队列头部修改成初始状态.
+	vb->state = VIDEOBUF_NEEDS_INIT;//将队列头部修改成初始状态.
 }
 
 
