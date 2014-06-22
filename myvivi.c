@@ -59,9 +59,6 @@ static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 static int myvivi_vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 			struct v4l2_format *f)
 {
-	struct vivi_fh  *fh  = priv;
-	struct vivi_dev *dev = fh->dev;
-	struct vivi_fmt *fmt;
 	enum v4l2_field field;
 	unsigned int maxw, maxh;
 
