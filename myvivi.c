@@ -96,7 +96,7 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 {
 	/*在列表格式时,只支持了一种格式V4L2_PIX_FMT_YUYV,这里并没有具体硬件设备,只是虚拟
 	的摄像头设备,所以这里直接将拥有值为V4L2_PIX_FMT_YUYV这个结构的信息返回用户空间.*/
-	int ret = myvivi_vidioc_try_fmt_vid_cap(file, fh, f);
+	int ret = myvivi_vidioc_try_fmt_vid_cap(file, NULL, f);
 	if (ret < 0)
 		return ret;
 	//将传进来的格式参数拷贝到myvivi_format结构.
