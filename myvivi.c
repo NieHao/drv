@@ -38,7 +38,7 @@ static int myvivi_vidioc_querycap(struct file *file, void  *priv,
 	return 0;
 }
 
-
+/*列举支持的格式*/
 static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 					struct v4l2_fmtdesc *f)
 {
@@ -48,6 +48,86 @@ static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 	strcpy(f->description, "4:2:2, packed, YUYV");
 	f->pixelformat = V4L2_PIX_FMT_YUYV;
 	return 0;
+}
+
+/*返回当前使用的格式:
+	构造 v4l2_format 结构体.
+*/
+static int myvivi_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
+					struct v4l2_format *f)
+{
+	struct vivi_fh *fh = priv;
+
+	f->fmt.pix.width        = fh->width;
+	f->fmt.pix.height       = fh->height;
+	f->fmt.pix.field        = fh->vb_vidq.field;
+	f->fmt.pix.pixelformat  = fh->fmt->fourcc;
+	f->fmt.pix.bytesperline =
+		(f->fmt.pix.width * fh->fmt->depth) >> 3;
+	f->fmt.pix.sizeimage =
+		f->fmt.pix.height * f->fmt.pix.bytesperline;
+
+	return (0);
+}
+
+/*测试驱动程序是否支持某种格式*/
+static int myvivi_vidioc_try_fmt_vid_cap(struct file *file, void *priv,
+			struct v4l2_format *f)
+{
+	struct vivi_fh  *fh  = priv;
+	struct vivi_dev *dev = fh->dev;
+	struct vivi_fmt *fmt;
+	enum v4l2_field field;
+	unsigned int maxw, maxh;
+
+	if(f->fmt.pix.pixelformat != V4L2_PIX_FMT_YUYV)
+		return -EINVAL;
+	
+	field = f->fmt.pix.field;
+
+	if (field == V4L2_FIELD_ANY) {
+		field = V4L2_FIELD_INTERLACED;
+	} else if (V4L2_FIELD_INTERLACED != field) {
+		return -EINVAL;
+	}
+
+	maxw  = 1024;
+	maxh  = 768;
+
+	/*调整format的width,height,
+	  计算每行占的字符数bytesperline,和图像大小sizeimage.
+	*/
+	f->fmt.pix.field = field;
+	v4l_bound_align_image(&f->fmt.pix.width, 48, maxw, 2,
+			      &f->fmt.pix.height, 32, maxh, 0, 0);
+	f->fmt.pix.bytesperline =
+		(f->fmt.pix.width * 16) >> 3;
+	f->fmt.pix.sizeimage =
+		f->fmt.pix.height * f->fmt.pix.bytesperline;
+
+	return 0;
+}
+
+
+/*设置格式*/
+static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
+					struct v4l2_format *f)
+{
+	/*在列表格式时,只支持了一种格式V4L2_PIX_FMT_YUYV,这里并没有具体硬件设备,只是虚拟
+	的摄像头设备,所以这里直接将拥有值为V4L2_PIX_FMT_YUYV这个结构的信息返回用户空间.*/
+	struct vivi_fh *fh = priv;
+
+	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
+	if (ret < 0)
+		return ret;
+
+	fh->fmt           = get_format(f);
+	fh->width         = f->fmt.pix.width;
+	fh->height        = f->fmt.pix.height;
+	fh->vb_vidq.field = f->fmt.pix.field;
+	fh->type          = f->type;
+
+	return ret;
 }
 
 
