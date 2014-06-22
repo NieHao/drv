@@ -32,7 +32,6 @@ static int myvivi_vidioc_querycap(struct file *file, void  *priv,
 {
 	strcpy(cap->driver, "myvivi");//名字
 	strcpy(cap->card, "myvivi");
-	strlcpy(cap->bus_info, dev->v4l2_dev.name, sizeof(cap->bus_info));
 	cap->version = 0x0001; //版本号
 	cap->capabilities =	V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
 	//表示是一个video捕捉设备.
@@ -60,7 +59,6 @@ static const struct v4l2_ioctl_ops myvivi_ioctl_ops = {
 		.vidioc_streamoff	  = myvivi_vidioc_streamoff,
 #endif
 };
-
 
 //驱动是桥梁,加载了驱动后,APP调用read,write或ioctl时,就会调用到内核驱动提供的相应函数:
 static const struct v4l2_file_operations myvivi_fops = {
