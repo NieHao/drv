@@ -63,7 +63,7 @@ static const struct v4l2_ioctl_ops myvivi_ioctl_ops = {
 //驱动是桥梁,加载了驱动后,APP调用read,write或ioctl时,就会调用到内核驱动提供的相应函数:
 static const struct v4l2_file_operations myvivi_fops = {
 	.owner		= THIS_MODULE,
-	.ioctl = video_ioctl2,
+	.ioctl = video_ioctl2,//完成第1个ioctl后,摄像头设备可以识别了.
 	
 };
 
