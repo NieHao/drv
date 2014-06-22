@@ -43,9 +43,9 @@ static spinlock_t myvivi_queue_slock;
 	        填充video_buf结构体,调用函数videobuf_iolock()来分配buf的空间.
    ------------------------------------------------------------------*/
 static int
-myvivi_buffer_setup(struct videobuf_queue *vq, unsigned int *count, unsigned int *size)
+myvivi_buffer_setup(struct videobuf_queue *vq, unsigned int *count, 
+	unsigned int *size)
 {
-
 	*size = myvivi_format.fmt.pix.sizeimage;
 
 	if (0 == *count)
@@ -123,10 +123,8 @@ static int myvivi_open(struct file * file)
 {
 	/*队列操作2: 初始化*/
 	videobuf_queue_vmalloc_init(&myvivi_vb_vidqueue, &myvivi_video_qops,
-			NULL, &dev->slock, V4L2_BUF_TYPE_VIDEO_CAPTURE, V4L2_FIELD_INTERLACED,
-			sizeof(struct videobuf_buffer), fh);
-
-	vivi_start_thread(fh);
+			NULL, &myvivi_queue_slock, V4L2_BUF_TYPE_VIDEO_CAPTURE, V4L2_FIELD_INTERLACED,
+			sizeof(struct videobuf_buffer), NULL);
 
 	return 0;
 }
@@ -276,7 +274,7 @@ static const struct v4l2_file_operations myvivi_fops = {
 	.owner		= THIS_MODULE,
 	.ioctl = video_ioctl2,//完成第1个ioctl后,摄像头设备可以识别了.
 	.open  = myvivi_open,
-	.close = myvivi_close,
+	.release = myvivi_close,
 	
 };
 
