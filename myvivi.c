@@ -50,26 +50,6 @@ static int myvivi_vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 	return 0;
 }
 
-/*返回当前使用的格式:
-	构造 v4l2_format 结构体.
-*/
-static int myvivi_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-					struct v4l2_format *f)
-{
-	struct vivi_fh *fh = priv;
-
-	f->fmt.pix.width        = fh->width;
-	f->fmt.pix.height       = fh->height;
-	f->fmt.pix.field        = fh->vb_vidq.field;
-	f->fmt.pix.pixelformat  = fh->fmt->fourcc;
-	f->fmt.pix.bytesperline =
-		(f->fmt.pix.width * fh->fmt->depth) >> 3;
-	f->fmt.pix.sizeimage =
-		f->fmt.pix.height * f->fmt.pix.bytesperline;
-
-	return (0);
-}
-
 /*测试驱动程序是否支持某种格式*/
 static int myvivi_vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 			struct v4l2_format *f)
@@ -128,6 +108,27 @@ static int myvivi_vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	fh->type          = f->type;
 
 	return ret;
+}
+
+
+/*返回当前使用的格式:
+	构造 v4l2_format 结构体.
+*/
+static int myvivi_vidioc_g_fmt_vid_cap(struct file *file, void *priv,
+					struct v4l2_format *f)
+{
+	struct vivi_fh *fh = priv;
+
+	f->fmt.pix.width        = fh->width;
+	f->fmt.pix.height       = fh->height;
+	f->fmt.pix.field        = fh->vb_vidq.field;
+	f->fmt.pix.pixelformat  = fh->fmt->fourcc;
+	f->fmt.pix.bytesperline =
+		(f->fmt.pix.width * fh->fmt->depth) >> 3;
+	f->fmt.pix.sizeimage =
+		f->fmt.pix.height * f->fmt.pix.bytesperline;
+
+	return (0);
 }
 
 
