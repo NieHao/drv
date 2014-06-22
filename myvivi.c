@@ -23,7 +23,10 @@
 #include <media/v4l2-device.h>
 #include <media/v4l2-ioctl.h>
 
-v4l2_format *myvivi_format;
+/*v4l2像素的格式结构: formats格式数组的索引，vivi.c中定义了6项格式。
+还有BUF的类型，格式的描述，即格式名称。像素的格式。	
+*/
+static struct v4l2_fmtdesc myvivi_format;
 
 /* ------------------------------------------------------------------
 	IOCTL vidioc handling
