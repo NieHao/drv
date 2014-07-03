@@ -26,7 +26,7 @@ static int myuvc_probe(struct usb_interface *intf,
 	struct usb_device *udev = interface_to_usbdev(intf);
 	struct usb_device_descriptor *descriptor = &udev->descriptor;//USB设备描述符
 
-	int i,j,k,l;
+	int i,j;
 	struct usb_host_config *hostconfig;
 	struct usb_config_descriptor *config;//配置描述符
 
@@ -35,12 +35,6 @@ static int myuvc_probe(struct usb_interface *intf,
 
     //接口描述符指针:
     struct usb_interface_descriptor *interface;
-
-    //打印UVC规范自已定义的描述符.
-    unsigned char *buffer;//指向当前设置中的dev->intf->cur_altsetting->extralen。
-	int buflen;
-    int desc_len;
-    int desc_cnt;
 	
 	printk("myuvc_probe:cnt = %d\n",cnt++);
 	//参考lsusb.c->dump_device()打印设备描述符.
@@ -142,24 +136,6 @@ static int myuvc_probe(struct usb_interface *intf,
 	       interface->bLength, interface->bDescriptorType, interface->bInterfaceNumber,
 	       interface->bAlternateSetting, interface->bNumEndpoints, interface->bInterfaceClass,
 	       interface->bInterfaceSubClass, interface->bInterfaceProtocol,interface->iInterface);
-        }
-        buffer = intf->cur_altsetting->extra;//设备所有uvc定义的描述都会存在这里.
-        buflen = intf->cur_altsetting->extralen;//设备所有uvc定义的描述符总长度.
-        //所有描述符usb_interface_assoc_descriptor结构的第一个成员是该描述符的长度。
-        printk("extra buffer of interface %d:\n", cnt-1);
-        k = 0;
-        desc_cnt = 0;   //第几个额外的描述符
-        while(k < buflen)
-        {
-            //所有描述符usb_interface_assoc_descriptor结构的第一个成员是该描述符的长度。所以先得到它。
-            desc_len = buffer[k];
-            printk("extra desc %d: ", desc_cnt);
-            for(l = 0; l < desc_len; l++,k++)
-            {
-                printk("%02x ", buffer[k]);
-            }
-            desc_cnt++;
-            printk("\n");                
         }
 	}
 	return 0;
